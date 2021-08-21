@@ -12,6 +12,7 @@ djangorestframework-simplejwt = "*"
 djangorestframework-camel-case = "*"
 django-cors-headers = "*"
 reverse = "*"
+djangorestframework-include-mixin = "*"
 
 [dev-packages]
 flake8 = "*"
