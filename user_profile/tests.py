@@ -51,7 +51,7 @@ class TestProfileViewSet(BaseAPITest):
     def test_get_profile_unauthorized(self):
         self.logout()
         response = self.client.get(reverse('v1:user_profile:profile'))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_change_password(self):
         data = {
@@ -60,13 +60,13 @@ class TestProfileViewSet(BaseAPITest):
         }
         response = self.client.post(reverse('v1:user_profile:password-change'), data=data)
         self.user.refresh_from_db()
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(check_password(data['password'], self.user.password))
 
     def test_change_password_wrong_old_password(self):
         data = {
             "old_password": self.password + 'some_str',
-            "password": "new_pass!"
+            "password": "newpass123"
         }
         response = self.client.post(reverse('v1:user_profile:password-change'), data=data)
         self.user.refresh_from_db()
@@ -80,24 +80,30 @@ class TestProfileViewSet(BaseAPITest):
         }
         response = self.client.patch(reverse('v1:user_profile:email'), data=data)
         self.user.refresh_from_db()
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(self.user.email, data['email'])
         self.assertEqual(response.data['email'], data['email'])
 
     def test_email_already_exists(self):
         data = {
-            "email": "test@email.com",
+            "email": "test1@email.com",
         }
-        self.create(email=data['email'])
+        #self.create(email=data['email'])
         response = self.client.patch(reverse('v1:user_profile:email'), data=data)
         self.user.refresh_from_db()
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertNotEqual(self.user.email, data['email'])
 
     def test_email_uppercase_already_exists(self):
         email = "test453211@mail.com"
-        self.create(email=email)
+        #self.create(email=email)
         response = self.client.patch(reverse('v1:user_profile:email'), data={"email": email.upper()})
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.user.refresh_from_db()
         self.assertNotEqual(self.user.email, email)
+
+    def test_deactivate_user_profile(self):
+        response = self.client.post(reverse('v1:user_profile:deactivate'))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.user.refresh_from_db()
+        self.assertFalse(self.user.is_active)

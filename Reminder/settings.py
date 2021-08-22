@@ -87,14 +87,24 @@ WSGI_APPLICATION = 'Reminder.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env.str("POSTGRES_DB"),
-        'USER': env.str("POSTGRES_USER"),
-        'PASSWORD': env.str("POSTGRES_PASSWORD"),
-        'HOST': env.str("DB_HOST"),
-        'PORT': env.str("DB_PORT"),
+        'NAME': env.str("POSTGRES_DB", "django_db"),
+        'USER': env.str("POSTGRES_USER", "user"),
+        'PASSWORD': env.str("POSTGRES_PASSWORD", "password"),
+        'HOST': env.str("DB_HOST", "localhost"),
+        'PORT': env.str("DB_PORT", "5433"),
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': env.str("POSTGRES_DB"),
+#         'USER': env.str("POSTGRES_USER"),
+#         'PASSWORD': env.str("POSTGRES_PASSWORD"),
+#         'HOST': env.str("DB_HOST"),
+#         'PORT': env.str("DB_PORT"),
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -179,3 +189,14 @@ SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = env.str('EMAIL_SMTP', 'smtp.gmail.com')
+EMAIL_HOST_USER = env.str('EMAIL_USER', '')
+EMAIL_HOST_PASSWORD = env.str('EMAIL_PASSWORD', '')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_PORT = 587
+
+
+FE_SITE_URL = env.str('FE_SITE_URL', '')

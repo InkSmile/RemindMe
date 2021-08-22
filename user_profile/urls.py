@@ -11,4 +11,6 @@ urlpatterns = [
          name='password-change'),
     path('email/', views.ProfileViewSet.as_view({"patch": "change_email"}),
          name='email'),
+    path('deactivate/', views.ProfileViewSet.as_view({"post": "deactivate"}),
+         name='deactivate'),
 ]

@@ -33,24 +33,26 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
     #     return value
 
 class UserProfilePasswordChangeSerializer(serializers.Serializer):
-    old_password = serializers.CharField()
-    password = serializers.CharField()
+    old_password = serializers.CharField(required=True)
+    password = serializers.CharField(required=True)
 
     class Meta:
+        model = User
         field = ('old password', 'password')
 
-    def validate_password(self, value):
-        user = self.context['request'].user
-        if not user.check_password(value):
-            raise ValidationError('Wrong password')
-        return value
 
-    def save(self):
-        password = self.validated_data['password']
-        user = self.context['request'].user
-        user.set_password(password)
-        user.save()
-        return user
+    # def validate_password(self, value):
+    #     user = self.context['request'].user
+    #     if not user.check_password(value):
+    #         raise ValidationError('Wrong password')
+    #     return value
+
+    # def save(self):
+    #     password = self.validated_data['password']
+    #     user = self.context['request'].user
+    #     user.set_password(password)
+    #     user.save()
+    #     return user
 
 class UserEmailSerializer(ValidateEmailSerializerMixin, ValidatePathSerializerMixin, serializers.ModelSerializer):
     path = serializers.RegexField(regex=r'[a-zA-Z0-9_\-\/]+', required=True, write_only=True)
