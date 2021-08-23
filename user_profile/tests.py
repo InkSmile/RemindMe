@@ -6,6 +6,7 @@ from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import AccessToken
 from django.utils import timezone
 from authentication.models import User
+from unittest.mock import patch
 
 
 class BaseAPITest(APITestCase):
@@ -53,6 +54,7 @@ class TestProfileViewSet(BaseAPITest):
         response = self.client.get(reverse('v1:user_profile:profile'))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+
     def test_change_password(self):
         data = {
             "old_password": self.password,
@@ -60,8 +62,9 @@ class TestProfileViewSet(BaseAPITest):
         }
         response = self.client.post(reverse('v1:user_profile:password-change'), data=data)
         self.user.refresh_from_db()
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertTrue(check_password(data['password'], self.user.password))
+
 
     def test_change_password_wrong_old_password(self):
         data = {
@@ -81,6 +84,7 @@ class TestProfileViewSet(BaseAPITest):
         response = self.client.patch(reverse('v1:user_profile:email'), data=data)
         self.user.refresh_from_db()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(self.user.is_active)
         self.assertEqual(self.user.email, data['email'])
         self.assertEqual(response.data['email'], data['email'])
 

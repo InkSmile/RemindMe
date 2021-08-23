@@ -37,6 +37,8 @@ class ProfileViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewset
             return Response(response)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # @swagger_auto_schema(request_body=serializers.UserProfilePasswordChangeSerializer)
+    # @action(methods=['POST'], detail=False)
     # def change_password(self, *args, **kwargs):
     #     user = self.get_object()
     #     serializer = serializers.UserProfilePasswordChangeSerializer(data=self.request.data, context={'request': self.request})
