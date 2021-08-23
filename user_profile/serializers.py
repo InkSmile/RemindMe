@@ -20,11 +20,11 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
         fields = ('id', 'email')
         read_only_fields = ('id', 'email')
 
-    # def validate_email(self, value):
-    #     user = self.context['request'].user
-    #     if User.objects.exclude(pk=user.pk).filter(email=value).exists():
-    #         raise serializers.ValidationError({"email": "This email is already in use."})
-    #     return value
+    def validate_email(self, value):
+        user = self.context['request'].user
+        if User.objects.exclude(pk=user.pk).filter(email=value).exists():
+            raise serializers.ValidationError({"email": "This email is already in use."})
+        return value
 
     # def validate_username(self, value):
     #     user = self.context['request'].user
@@ -38,21 +38,21 @@ class UserProfilePasswordChangeSerializer(serializers.Serializer):
 
     class Meta:
         model = User
-        field = ('old password', 'password')
+        field = ('old_password', 'password')
 
 
-    # def validate_password(self, value):
-    #     user = self.context['request'].user
-    #     if not user.check_password(value):
-    #         raise ValidationError('Wrong password')
-    #     return value
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise ValidationError('Wrong password')
+        return value
 
-    # def save(self):
-    #     password = self.validated_data['password']
-    #     user = self.context['request'].user
-    #     user.set_password(password)
-    #     user.save()
-    #     return user
+    def save(self):
+        password = self.validated_data['password']
+        user = self.context['request'].user
+        user.set_password(password)
+        user.save()
+        return user
 
 class UserEmailSerializer(ValidateEmailSerializerMixin, ValidatePathSerializerMixin, serializers.ModelSerializer):
     path = serializers.RegexField(regex=r'[a-zA-Z0-9_\-\/]+', required=True, write_only=True)

@@ -18,33 +18,33 @@ class ProfileViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewset
 
 
 
-    @swagger_auto_schema(request_body=serializers.UserProfilePasswordChangeSerializer)
-    @action(methods=['POST'], detail=False)
-    def change_password(self, request, *args, **kwargs):
-        user = self.get_object()
-        serializer = serializers.UserProfilePasswordChangeSerializer(data=self.request.data)
-        if serializer.is_valid(raise_exception=True):
-            if not user.check_password(serializer.data.get('old password')):
-                return Response({'old password': ['Wrong password.']}, status=status.HTTP_400_BAD_REQUEST)
-            user.set_password(serializer.data.get('password'))
-            user.save()
-            response = {
-                'status': 'success',
-                'code': status.HTTP_200_OK,
-                'message': 'Password updated successfully',
-                'data': []
-            }
-            return Response(response)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
     # @swagger_auto_schema(request_body=serializers.UserProfilePasswordChangeSerializer)
     # @action(methods=['POST'], detail=False)
-    # def change_password(self, *args, **kwargs):
+    # def change_password(self, request, *args, **kwargs):
     #     user = self.get_object()
-    #     serializer = serializers.UserProfilePasswordChangeSerializer(data=self.request.data, context={'request': self.request})
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
-    #     return Response(status=status.HTTP_204_NO_CONTENT)
+    #     serializer = serializers.UserProfilePasswordChangeSerializer(data=self.request.data)
+    #     if serializer.is_valid(raise_exception=True):
+    #         if not user.check_password(serializer.data.get('old_password')):
+    #             return Response({'old_password': ['Wrong password.']}, status=status.HTTP_400_BAD_REQUEST)
+    #         user.set_password(serializer.data.get('password'))
+    #         user.save()
+    #         response = {
+    #             'status': 'success',
+    #             'code': status.HTTP_200_OK,
+    #             'message': 'Password updated successfully',
+    #             'data': []
+    #         }
+    #         return Response(response)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @swagger_auto_schema(request_body=serializers.UserProfilePasswordChangeSerializer)
+    @action(methods=['POST'], detail=False)
+    def change_password(self, *args, **kwargs):
+        user = self.get_object()
+        serializer = serializers.UserProfilePasswordChangeSerializer(data=self.request.data, context={'request': self.request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
     @swagger_auto_schema(request_body=serializers.UserEmailSerializer)
