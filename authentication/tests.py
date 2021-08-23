@@ -6,14 +6,12 @@ from authentication.models import User
 from django.utils import timezone
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
-# from unittest.mock import patch
+from unittest.mock import patch
 
 
 # --------------------------------------------
 class BaseAPITest(APITestCase):
-    """BaseAPITest class contains useful methods to
-    automatically create and authorize users via API with JWT
-    """
+
     def create(self, email='test@mail.com', password='test_password'):  # nosec
         user = User.objects.create_user(email=email, password=password)
         user.last_login = timezone.now()
@@ -126,24 +124,24 @@ class TestSignUpView(BaseAPITest):
             "path": "/activate/",
         }
 
-    # @patch('notifications.tasks.send_email.delay')
-    # def test_sign_up(self, email_delay):
-    def test_sign_up(self):
+
+    @patch('notifications.tasks.send_email.delay')
+    def test_sign_up(self, email_delay):
         resp = self.client.post(reverse('v1:authentication:sign-up'), data=self.data)
 
         self.assertEqual(resp.status_code, 201)
         self.assertTrue(User.objects.filter(email=self.data['email']).exists())
-        # email_delay.assert_called_once()
+        email_delay.assert_called_once()
 
-    # @patch('notifications.tasks.send_email.delay')
-    # def test_sign_up_email_to_lower_case(self, email_delay):
-    def test_sign_up_email_to_lower_case(self):
+
+    @patch('notifications.tasks.send_email.delay')
+    def test_sign_up_email_to_lower_case(self, email_delay):
         self.data['email'] = 'CAPs@mail.com'
         resp = self.client.post(reverse('v1:authentication:sign-up'), data=self.data)
 
         self.assertEqual(resp.status_code, 201)
         self.assertTrue(User.objects.filter(email=self.data['email'].lower(),).exists())
-        # email_delay.assert_called_once()
+        email_delay.assert_called_once()
 
     def test_sign_up_user_exists(self):
         email = 'test@test.com'
