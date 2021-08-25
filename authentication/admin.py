@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 from authentication.models import User
 
 class CustomUserAdmin(UserAdmin):
-    list_display = ('email', 'created_at', 'last_login', 'is_admin', 'is_staff')
+    list_display = ('email', 'created_at', 'last_login', 'is_admin', 'is_staff', 'is_active')
     search_fields = ('email',)
     readonly_fields = ('created_at', 'last_login')
 
