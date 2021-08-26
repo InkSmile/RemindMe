@@ -18,7 +18,9 @@ from django.urls import path, include
 
 api_urlpatterns = [
     path('auth/', include('authentication.urls')),
-    path('profile/', include('user_profile.urls'))
+    path('profile/', include('user_profile.urls')),
+    path('reminders/', include('reminders.urls')),
+    path('reminders-category/', include('reminders.urls'))
 ]
 
 urlpatterns = [

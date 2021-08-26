@@ -10,11 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import datetime
-
+import os
 import environs
 from pathlib import Path
 
 env = environs.Env()
+env.read_env() #allows to read .env file
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,10 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str('APP_SECRET', 'test')
+SECRET_KEY = env.str('APP_SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG_MODE', True)
+DEBUG = env.bool('DEBUG_MODE')
 
 ALLOWED_HOSTS = []
 
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'user_profile',
     'rest_framework',
     'corsheaders',
+    'reminders',
 ]
 
 MIDDLEWARE = [
@@ -190,14 +192,83 @@ SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = env.str('EMAIL_SMTP', 'smtp.gmail.com')
-EMAIL_HOST_USER = env.str('EMAIL_USER', '')
-EMAIL_HOST_PASSWORD = env.str('EMAIL_PASSWORD', '')
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-EMAIL_PORT = 587
+DJANGO_LOGFILE_NAME = env.str('DJANGO_LOG_PATH', os.path.join(BASE_DIR, '.data/django/access.log'))
+LOGFILE_SIZE = 5 * 1024 * 1024
+
+CELERY_LOGFILE_NAME = env.str('CELERY_LOG_PATH', os.path.join(BASE_DIR, '.data/django/celery.log'))
+
+if not os.path.exists(os.path.dirname(DJANGO_LOGFILE_NAME)):
+    os.makedirs(os.path.dirname(DJANGO_LOGFILE_NAME))
+
+if not os.path.exists(os.path.dirname(CELERY_LOGFILE_NAME)):
+    os.makedirs(os.path.dirname(CELERY_LOGFILE_NAME))
 
 
-FE_SITE_URL = env.str('FE_SITE_URL', '')
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s [%(asctime)s] - [%(name)s:%(funcName)s:%(lineno)s] %(message)s',
+        },
+    },
+    'handlers': {
+        'logfile': {
+            'level': 'DEBUG',
+            'formatter': 'verbose',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': DJANGO_LOGFILE_NAME,
+            'maxBytes': LOGFILE_SIZE
+        },
+        'celery_file': {
+            'level': 'DEBUG',
+            'formatter': 'verbose',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': CELERY_LOGFILE_NAME,
+            'maxBytes': LOGFILE_SIZE
+        },
+        'console': {
+            'level': 'DEBUG',
+            'formatter': 'verbose',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'celery': {
+            'handlers': ['celery_file', 'console'],
+            'propagate': True,
+            'level': env.str('CELERY_LOG_LEVEL', 'INFO'),
+        },
+        'django': {
+            'handlers': ['logfile', 'console'],
+            'propagate': True,
+            'level': env.str('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+    },
+}
+
+CELERY_BROKER_URL = env.str('BROKER_URL')
+CELERY_TASK_DEFAULT_QUEUE = "django"
+
+CELERY_TASK_SOFT_TIME_LIMIT = env.int('CELERY_TASK_SOFT_TIME_LIMIT_SEC', 40)
+CELERY_WORKER_SEND_TASK_EVENTS = True
+
+# MailJet
+MAILJET_PUBLIC_KEY=env.str('MAILJET_PUBLIC_KEY')
+MAILJET_SECRET_KEY=env.str('MAILJET_SECRET_KEY')
+MAILJET_API_VERSION=env.str('MAILJET_API_VERSION')
+MAILJET_USER=env.str('USER')
+
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#
+# EMAIL_USE_TLS = True
+# EMAIL_HOST = env.str('EMAIL_SMTP', 'smtp.gmail.com')
+# EMAIL_HOST_USER = env.str('EMAIL_USER', '')
+# EMAIL_HOST_PASSWORD = env.str('EMAIL_PASSWORD', '')
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# EMAIL_PORT = 587
+
+
+# FE_SITE_URL = env.str('FE_SITE_URL', '')

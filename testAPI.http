@@ -1,6 +1,8 @@
-GET http://localhost:8000/password/change/
+POST http://localhost:8000/v1/auth/sign-up/
 Accept: application/json
 {
+"email": "goodone@gmail.com",
+"password": "1234",
 
 }
 

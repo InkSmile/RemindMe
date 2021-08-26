@@ -32,9 +32,9 @@ class SignUpView(CreateAPIView):
             subject="Welcome to Reminder",
             template="activation.html",
             recipients=[user.email],
-            context={
-                'url': utils.construct_url(serializer.validated_data['path'], token),
-            }
+            # context={
+            #     'url': utils.construct_url(serializer.validated_data['path'], token),
+            # }
          )
 
 class ActivateUserView(APIView):
