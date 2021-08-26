@@ -1,20 +1,27 @@
 import logging
 
-from billiard.exceptions import SoftTimeLimitExceeded
 from celery import shared_task
-from celery.exceptions import MaxRetriesExceededError
-from django.core.mail import EmailMessage
-from django.template import loader
+from celery.exceptions import MaxRetriesExceededError, SoftTimeLimitExceeded
 from django.template.loader import render_to_string
+from django.conf import settings
 from mailjet_rest import Client
-from Reminder import settings
-from Reminder.settings import MAILJET_API_VERSION
 
-logger = logging.getLogger("celery")
+from Reminder.constants import MAILJET_API_VERSION
+
+
+logger = logging.getLogger('celery')
 
 
 @shared_task(bind=True, max_retries=3)
 def send_email(self, subject, template, recipients, context):
+    """
+    Sending email
+    :param self:
+    :param subject: message title
+    :param template: name of template
+    :param recipients: list of recipients
+    :param context: message data in dict format
+    """
     mailjet = Client(auth=(settings.MAILJET_PUBLIC_KEY, settings.MAILJET_SECRET_KEY), version=MAILJET_API_VERSION)
     recipients = [{'Email': recipient} for recipient in recipients]
     message = render_to_string(template, context)
@@ -23,7 +30,7 @@ def send_email(self, subject, template, recipients, context):
             {
                 'From': {
                     'Email': settings.MAILJET_USER,
-                    'Name': 'RemindME'
+                    'Name': 'RemindMe Support'
                 },
                 'To': recipients,
                 'Subject': subject,

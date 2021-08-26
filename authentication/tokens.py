@@ -9,5 +9,4 @@ class _TokenGenFactory(PasswordResetTokenGenerator):
             six.text_type(user.is_active)
         )
 
-
 TokenGenerator = _TokenGenFactory()

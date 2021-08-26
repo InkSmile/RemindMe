@@ -15,7 +15,7 @@ import environs
 from pathlib import Path
 
 env = environs.Env()
-env.read_env() #allows to read .env file
+env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,10 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str('APP_SECRET')
+SECRET_KEY = env.str('SECRET_KEY', 'test')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG_MODE')
+DEBUG = env.bool('DEBUG_MODE', True)
 
 ALLOWED_HOSTS = []
 
@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'user_profile',
     'rest_framework',
     'corsheaders',
-    'reminders',
 ]
 
 MIDDLEWARE = [
@@ -68,7 +67,8 @@ ROOT_URLCONF = 'Reminder.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        ,
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -97,6 +97,8 @@ DATABASES = {
         'PORT': env.str("DB_PORT", "5433"),
     }
 }
+
+
 
 # DATABASES = {
 #     'default': {
@@ -173,8 +175,8 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(
-        hours=env.int('ACCESS_TOKEN_LIFETIME_HOURS', 0),
-        minutes=env.int('ACCESS_TOKEN_LIFETIME_MINUTES', 20),
+        hours=env.int('ACCESS_TOKEN_LIFETIME_HOURS', 10),
+        minutes=env.int('ACCESS_TOKEN_LIFETIME_MINUTES', 0),
     ),
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=env.int('REFRESH_TOKEN_LIFETIME_DAYS', 7)),
     'ROTATE_REFRESH_TOKENS': True,
@@ -193,82 +195,19 @@ SIMPLE_JWT = {
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
 
-DJANGO_LOGFILE_NAME = env.str('DJANGO_LOG_PATH', os.path.join(BASE_DIR, '.data/django/access.log'))
-LOGFILE_SIZE = 5 * 1024 * 1024
 
-CELERY_LOGFILE_NAME = env.str('CELERY_LOG_PATH', os.path.join(BASE_DIR, '.data/django/celery.log'))
+FE_SITE_URL = env.str('FE_SITE_URL', '')
 
-if not os.path.exists(os.path.dirname(DJANGO_LOGFILE_NAME)):
-    os.makedirs(os.path.dirname(DJANGO_LOGFILE_NAME))
-
-if not os.path.exists(os.path.dirname(CELERY_LOGFILE_NAME)):
-    os.makedirs(os.path.dirname(CELERY_LOGFILE_NAME))
-
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
-    'formatters': {
-        'verbose': {
-            'format': '%(levelname)s [%(asctime)s] - [%(name)s:%(funcName)s:%(lineno)s] %(message)s',
-        },
-    },
-    'handlers': {
-        'logfile': {
-            'level': 'DEBUG',
-            'formatter': 'verbose',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': DJANGO_LOGFILE_NAME,
-            'maxBytes': LOGFILE_SIZE
-        },
-        'celery_file': {
-            'level': 'DEBUG',
-            'formatter': 'verbose',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': CELERY_LOGFILE_NAME,
-            'maxBytes': LOGFILE_SIZE
-        },
-        'console': {
-            'level': 'DEBUG',
-            'formatter': 'verbose',
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'celery': {
-            'handlers': ['celery_file', 'console'],
-            'propagate': True,
-            'level': env.str('CELERY_LOG_LEVEL', 'INFO'),
-        },
-        'django': {
-            'handlers': ['logfile', 'console'],
-            'propagate': True,
-            'level': env.str('DJANGO_LOG_LEVEL', 'INFO'),
-        },
-    },
-}
-
-CELERY_BROKER_URL = env.str('BROKER_URL')
+# Celery Settings
+CELERY_BROKER_URL = env.str('BROKER_URL', '')
 CELERY_TASK_DEFAULT_QUEUE = "django"
+CELERY_TASK_SOFT_TIME_LIMIT = env.int('TASK_SOFT_TIME_LIMIT_SEC', 40)
 
-CELERY_TASK_SOFT_TIME_LIMIT = env.int('CELERY_TASK_SOFT_TIME_LIMIT_SEC', 40)
-CELERY_WORKER_SEND_TASK_EVENTS = True
+# MailJet Settings
+MAILJET_PUBLIC_KEY = env.str('MAILJET_PUBLIC_KEY', '')
+MAILJET_SECRET_KEY = env.str('MAILJET_SECRET_KEY', '')
+MAILJET_USER = env.str('MAILJET_USER', '')
 
-# MailJet
-MAILJET_PUBLIC_KEY=env.str('MAILJET_PUBLIC_KEY')
-MAILJET_SECRET_KEY=env.str('MAILJET_SECRET_KEY')
-MAILJET_API_VERSION=env.str('MAILJET_API_VERSION')
-MAILJET_USER=env.str('USER')
+USER_ACTIVATION_URL = env.str('USER_ACTIVATION_URL', '')
 
-
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#
-# EMAIL_USE_TLS = True
-# EMAIL_HOST = env.str('EMAIL_SMTP', 'smtp.gmail.com')
-# EMAIL_HOST_USER = env.str('EMAIL_USER', '')
-# EMAIL_HOST_PASSWORD = env.str('EMAIL_PASSWORD', '')
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-# EMAIL_PORT = 587
-
-
-# FE_SITE_URL = env.str('FE_SITE_URL', '')
+# EMAIL_BACKEND = 'django_mailjet.backends.MailjetBackend'

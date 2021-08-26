@@ -16,9 +16,8 @@ djangorestframework-include-mixin = "*"
 six = "*"
 celery = "*"
 drf-yasg = "*"
-mailjet-rest = "*"
-mailjet = "*"
 redis = "*"
+mailjet-rest = "*"
 
 [dev-packages]
 flake8 = "*"
