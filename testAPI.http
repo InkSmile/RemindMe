@@ -1,9 +1,8 @@
 POST http://localhost:8000/v1/auth/sign-up/
 Accept: application/json
 {
-"email": "goodone@gmail.com",
+"email": "vovikbobik90@gmail.com",
 "password": "1234",
-
 }
 
-###
+

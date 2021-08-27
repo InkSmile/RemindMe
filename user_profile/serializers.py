@@ -32,6 +32,7 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
     #         raise serializers.ValidationError({"username": "This username is already in use."})
     #     return value
 
+
 class UserProfilePasswordChangeSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     password = serializers.CharField(required=True)
@@ -39,7 +40,6 @@ class UserProfilePasswordChangeSerializer(serializers.Serializer):
     class Meta:
         model = User
         field = ('old_password', 'password')
-
 
     def validate_old_password(self, value):
         user = self.context['request'].user
@@ -53,6 +53,7 @@ class UserProfilePasswordChangeSerializer(serializers.Serializer):
         user.set_password(password)
         user.save()
         return user
+
 
 class UserEmailSerializer(ValidateEmailSerializerMixin, ValidatePathSerializerMixin, serializers.ModelSerializer):
     path = serializers.RegexField(regex=r'[a-zA-Z0-9_\-\/]+', required=True, write_only=True)
