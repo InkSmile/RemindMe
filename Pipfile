@@ -18,6 +18,7 @@ celery = "*"
 drf-yasg = "*"
 redis = "*"
 mailjet-rest = "*"
+mixer = "*"
 
 [dev-packages]
 flake8 = "*"

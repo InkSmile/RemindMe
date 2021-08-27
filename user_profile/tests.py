@@ -92,7 +92,7 @@ class TestProfileViewSet(BaseAPITest):
         data = {
             "email": "test1@email.com",
         }
-        #self.create(email=data['email'])
+        self.create(email=data['email'])
         response = self.client.patch(reverse('v1:user_profile:email'), data=data)
         self.user.refresh_from_db()
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -100,7 +100,7 @@ class TestProfileViewSet(BaseAPITest):
 
     def test_email_uppercase_already_exists(self):
         email = "test453211@mail.com"
-        #self.create(email=email)
+        self.create(email=email)
         response = self.client.patch(reverse('v1:user_profile:email'), data={"email": email.upper()})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.user.refresh_from_db()
