@@ -17,6 +17,7 @@ class SignUpSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         password = validated_data.pop('password')
         user = User(**validated_data)
+        user.email = user.email.lower()
         user.set_password(password)
         user.save()
         token = f'{urlsafe_base64_encode(force_bytes(user.email))}.{TokenGenerator.make_token(user)}'
