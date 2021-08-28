@@ -19,6 +19,7 @@ drf-yasg = "*"
 redis = "*"
 mailjet-rest = "*"
 mixer = "*"
+django-filter = "*"
 
 [dev-packages]
 flake8 = "*"

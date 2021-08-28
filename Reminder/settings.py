@@ -176,7 +176,7 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(
-        hours=env.int('ACCESS_TOKEN_LIFETIME_HOURS', 10),
+        hours=env.int('ACCESS_TOKEN_LIFETIME_HOURS', 100),
         minutes=env.int('ACCESS_TOKEN_LIFETIME_MINUTES', 0),
     ),
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=env.int('REFRESH_TOKEN_LIFETIME_DAYS', 7)),
