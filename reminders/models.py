@@ -15,6 +15,7 @@ class Reminders(models.Model):
     category = models.ForeignKey(RemindersCategory, on_delete=models.CASCADE, related_name='reminders')
     description = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    remind_at = models.DateTimeField()
 
     class Meta:
         db_table = 'reminders'
