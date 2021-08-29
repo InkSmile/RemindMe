@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from notifications.models import Email
+
+
+@admin.register(Email)
+class EmailAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'email')
+    search_fields = ('email',)
