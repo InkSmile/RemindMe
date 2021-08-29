@@ -1,7 +1,11 @@
 {
     "_meta": {
         "hash": {
+<<<<<<< HEAD
             "sha256": "04d88a040e8c9514607f5bd2981dc9f18bf1177bc6a19311e573d76330e09347"
+=======
+            "sha256": "2801ddf8fa1c58794b73b092fc027a626911e5763de4f673c8aeab2c4b0a768a"
+>>>>>>> feature/REM-7/Oleh
         },
         "pipfile-spec": 6,
         "requires": {
@@ -128,6 +132,7 @@
             "index": "pypi",
             "version": "==3.8.0"
         },
+<<<<<<< HEAD
         "django-timezone-field": {
             "hashes": [
                 "sha256:6dc782e31036a58da35b553bd00c70f112d794700025270d8a6a4c1d2e5b26c6",
@@ -135,6 +140,15 @@
             ],
             "markers": "python_version >= '3.5'",
             "version": "==4.2.1"
+=======
+        "django-filter": {
+            "hashes": [
+                "sha256:84e9d5bb93f237e451db814ed422a3a625751cbc9968b484ecc74964a8696b06",
+                "sha256:e00d32cebdb3d54273c48f4f878f898dced8d5dfaad009438fe61ebdf535ace1"
+            ],
+            "index": "pypi",
+            "version": "==2.4.0"
+>>>>>>> feature/REM-7/Oleh
         },
         "djangorestframework": {
             "hashes": [

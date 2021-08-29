@@ -19,7 +19,11 @@ drf-yasg = "*"
 redis = "*"
 mailjet-rest = "*"
 mixer = "*"
+<<<<<<< HEAD
 django-celery-beat = "*"
+=======
+django-filter = "*"
+>>>>>>> feature/REM-7/Oleh
 
 [dev-packages]
 flake8 = "*"
