@@ -1,4 +1,4 @@
-from user_profile.tests import BaseAPITest
+from Reminder.tests import BaseAPITest
 from reminders.models import Reminders, RemindersCategory
 from authentication.models import User
 from rest_framework import status
@@ -146,20 +146,8 @@ class TestRemindersViewSet(BaseAPITest):
         response = self.client.post(reverse('v1:reminders:reminders_category-list'), data=data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    # def test_search_reminders(self):
-    #     data = {
-    #         'reminder': 'test',
-    #         'description': 'test_desc',
-    #         'category': self.reminder_category.id
-    #     }
-    #     response = self.client.get(reverse('v1:reminders:reminders-list:?search=test'), data={''})
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #
-    # def test_retrieve_filter_reminders(self):
-    #     pass
-    #
-    # def test_search_reminders_valid(self):
-    #     pass
+
+
 
 
 
