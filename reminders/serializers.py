@@ -10,6 +10,7 @@ class RemindersSerializer(serializers.ModelSerializer):
         fields = ("id", "reminder", "description", "category", "created_at", "remind_at")
         read_only_field = ("id", "create_at")
 
+
     def create(self, validated_data):
         new_reminder = super().create(validated_data)
 
