@@ -21,6 +21,7 @@ mailjet-rest = "*"
 mixer = "*"
 django-filter = "*"
 django-celery-beat = "*"
+coverage = "*"
 
 [dev-packages]
 flake8 = "*"
