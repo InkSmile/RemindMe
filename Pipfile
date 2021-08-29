@@ -20,10 +20,16 @@ redis = "*"
 mailjet-rest = "*"
 mixer = "*"
 <<<<<<< HEAD
+<<<<<<< HEAD
 django-celery-beat = "*"
 =======
 django-filter = "*"
 >>>>>>> feature/REM-7/Oleh
+=======
+django-filter = "*"
+django-celery-beat = "*"
+coverage = "*"
+>>>>>>> 9b1b9fb6bece3ffc999d97676222190329249f02
 
 [dev-packages]
 flake8 = "*"
