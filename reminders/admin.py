@@ -5,7 +5,7 @@ from reminders import models
 
 @admin.register(models.Reminders)
 class RemindersAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'reminder', 'created_at', 'category', 'description')
+    list_display = ('id', 'user', 'reminder', 'created_at', 'remind_at','category', 'description')
     search_fields = ('reminder',)
 
 

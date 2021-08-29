@@ -17,3 +17,13 @@ services:
       - 6379:6379
     volumes:
       - ./.data/redis:/data
+  rabbitmq:
+    image: rabbitmq:latest
+    env_file:
+      - .env
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./.data/rabbitmq/data/:/var/lib/rabbitmq/
+      - ./.data/rabbitmq/log/:/var/log/rabbitmq

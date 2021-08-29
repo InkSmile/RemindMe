@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'reminders',
+    'django_celery_beat'
 ]
 
 MIDDLEWARE = [
@@ -136,7 +137,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'EET'
 
 USE_I18N = True
 
@@ -210,5 +212,3 @@ MAILJET_SECRET_KEY = env.str('MAILJET_SECRET_KEY', '')
 MAILJET_USER = env.str('MAILJET_USER', '')
 
 USER_ACTIVATION_URL = env.str('USER_ACTIVATION_URL', '')
-
-# EMAIL_BACKEND = 'django_mailjet.backends.MailjetBackend'
