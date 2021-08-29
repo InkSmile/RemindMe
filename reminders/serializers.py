@@ -7,19 +7,9 @@ from notifications.tasks import send_email
 class RemindersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reminders
-<<<<<<< HEAD
-<<<<<<< HEAD
-        fields = ("id", "reminder", "description", "category", "created_at", "remind_at")
-        read_only_field = ("id", "create_at")
-=======
-        fields = ("id", "reminder", "description", "category", "created_at")
-        read_only_field = ("id", )
->>>>>>> feature/REM-7/Oleh
-=======
         fields = ("id", "reminder", "description", "category", "created_at", "remind_at")
         read_only_field = ("id", "create_at")
 
->>>>>>> 9b1b9fb6bece3ffc999d97676222190329249f02
 
     def create(self, validated_data):
         new_reminder = super().create(validated_data)
