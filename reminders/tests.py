@@ -23,6 +23,7 @@ class TestRemindersViewSet(BaseAPITest):
         data = {
             'reminder': 'something',
             'description': 'test',
+            'remind_at': '123',
             'category': self.reminder_category.id
         }
         response = self.client.post(reverse('v1:reminders:reminders-list'), data=data)
