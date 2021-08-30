@@ -5,6 +5,8 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 from mixer.backend.django import mixer
 from django.urls import reverse
+from unittest.mock import patch
+from django.utils import timezone
 
 
 class TestRemindersViewSet(BaseAPITest):
@@ -23,8 +25,8 @@ class TestRemindersViewSet(BaseAPITest):
         data = {
             'reminder': 'something',
             'description': 'test',
-            'remind_at': '123',
-            'category': self.reminder_category.id
+            'category': self.reminder_category.id,
+            "remind_at": timezone.now()
         }
         response = self.client.post(reverse('v1:reminders:reminders-list'), data=data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -35,7 +37,8 @@ class TestRemindersViewSet(BaseAPITest):
         data = {
             'reminder': None,
             'description': 'sometug',
-            'category': 'vbjnjnkj'
+            'category': 'vbjnjnkj',
+            "remind_at": timezone.now()
         }
         response = self.client.post(reverse('v1:reminders:reminders-list'), data=data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -44,7 +47,8 @@ class TestRemindersViewSet(BaseAPITest):
         data = {
             'reminder': 'tetssomer',
             'description': 'test description',
-            'category': self.reminder_category.id
+            'category': self.reminder_category.id,
+            "remind_at": timezone.now()
         }
         response = self.client.put(reverse('v1:reminders:reminders-detail', args=(self.reminder.id,)), data=data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -53,7 +57,8 @@ class TestRemindersViewSet(BaseAPITest):
         data = {
             'reminder': None,
             'description': 'testudpdate',
-            'category': self.reminder_category.id
+            'category': self.reminder_category.id,
+            "remind_at": timezone.now()
         }
         resp = self.client.put(reverse('v1:reminders:reminders-detail', args=(self.reminder.id,)), data=data)
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
@@ -147,11 +152,15 @@ class TestRemindersViewSet(BaseAPITest):
         response = self.client.post(reverse('v1:reminders:reminders_category-list'), data=data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-
-
-
-
-
-
-
-
+    @patch('notifications.tasks.send_email.apply_async')
+    def test_send_reminder_email(self, email_apply_async):
+        data = {
+            "reminder": "Hi Jack!",
+            "category": self.reminder_category.id,
+            "description": "Hi!",
+            "remind_at": timezone.now()
+        }
+        response = self.client.post(reverse("v1:reminders:reminders-list"), data=data)
+        self.assertTrue(Reminders.objects.filter(id=response.data['id']).exists())
+        self.assertEqual(response.status_code, 201)
+        email_apply_async.assert_called_once()
