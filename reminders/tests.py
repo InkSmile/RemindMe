@@ -27,6 +27,7 @@ class TestRemindersViewSet(BaseAPITest):
             'description': 'test',
             'category': self.reminder_category.id,
             "remind_at": timezone.now()
+
         }
         response = self.client.post(reverse('v1:reminders:reminders-list'), data=data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
