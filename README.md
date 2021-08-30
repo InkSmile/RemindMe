@@ -47,26 +47,34 @@ Endpoints:
 app name: authentication
 
 http://127.0.0.1:8000/v1/auth/	# obtail JWT
+
 http://127.0.0.1:8000/v1/auth/refresh/	# refresh JWT	
+
 http://127.0.0.1:8000/v1/auth/verify/	# verify JWT	
+
 http://127.0.0.1:8000/v1/auth/sign-up/	# user sign-up
+
 http://127.0.0.1:8000/v1/auth/activate/	# user activation
 
-
+***
 app name: notifications
 
 http://127.0.0.1:8000/v1/notifications/email/	# user add email to recipient list
 
-
+***
 app name: reminders
 
 http://127.0.0.1:8000/v1/reminders/category/	# CRUD reminder category
+
 http://127.0.0.1:8000/v1/reminders/	# CRUD reminder
 
-
+***
 app name: user_profile
 
 http://127.0.0.1:8000/v1/profile/		# retreive profile
+
 http://127.0.0.1:8000/v1/profile/password/change/	# change profile password
+
 http://127.0.0.1:8000/v1/profile/email/	# change profile email
+
 http://127.0.0.1:8000/v1/profile/deactivate/	# deactivate user profile
