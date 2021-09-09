@@ -13,7 +13,7 @@ services:
       - rabbitmq
   celery:
     build: .
-    command: celery -A Reminder worker -l info -Q django
+    command: celery -A Reminder worker -l info -Q
     env_file:
       - .env
     entrypoint: ""
