@@ -1,5 +1,5 @@
 # Changelog
-It`s a test program. So changelog is a big mass.
+It`s a test program. So changelog is a big mess.
 
 All notable changes to this project will be documented in this file.
 
